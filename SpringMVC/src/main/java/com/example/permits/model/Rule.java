@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Rule extends BaseObject {
+public class Rule extends BaseObjectImpl {
     private final static String ID_PATTERN = "P%07d";
 
     @NotBlank(message = "Name is required!")
