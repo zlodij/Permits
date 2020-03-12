@@ -2,7 +2,7 @@ package com.example.permits.model;
 
 import javax.validation.constraints.*;
 
-public class Accessor extends BaseObject {
+public class Accessor extends BaseObjectImpl {
     private final static String ID_PATTERN = "A%07d";
 
     @NotBlank()
