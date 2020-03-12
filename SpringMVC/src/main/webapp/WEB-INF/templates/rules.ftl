@@ -32,13 +32,11 @@
             <table border="0">
                 <tr>
                     <td>
-                        <#--                        <input name="add" value="Add" title="Add" type="button"-->
-                        <#--                               onClick="location.href='/rules/new/rule'">-->
-                        <input name="add" value="Add" title="Add" type="button">
+                        <input name="add" value="Add" title="Add" type="button"
+                               onClick="location.href='/rules/new'">
                     </td>
                     <td>
-                        <#--                        <input name="edit" value="Edit" title="Edit" type="button" onClick="javascript:onEdit()">-->
-                        <input name="edit" value="Edit" title="Edit" type="button">
+                        <input name="edit" value="Edit" title="Edit" type="button" onClick="javascript:onEdit()">
                     </td>
                     <td>
                         <#--                        <input name="remove" value="Remove" title="Remove" type="button"-->
