@@ -25,4 +25,6 @@
         <property name="contentType" value="text/html;charset=UTF-8"/>
         <property name="cache" value="false"/>
     </bean>
+
+    <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"/>
 </beans>
