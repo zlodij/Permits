@@ -18,11 +18,16 @@
                             <@sf.label path="name">Name</@sf.label>
                         </td>
                         <td>
+                            <input id="rule_id" name="rule_id" type="hidden" value="${rule.getId()}"/>
                             <@sf.input path="name"/>
                         </td>
                         <td>
-                            <@sf.errors path="name"/>
-                        <td>
+                            <#if nameValidationMessage??>
+                                <div style="color:red;font-style:italic;">
+                                    ${nameValidationMessage}
+                                </div>
+                            </#if>
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -32,7 +37,11 @@
                             <input id="name" name="description" type="text" value="${rule.getDescription()}"/>
                         </td>
                         <td>
-                            <@sf.errors path="description"/>
+                            <#if descriptionValidationMessage??>
+                                <div style="color:red;font-style:italic;">
+                                    ${descriptionValidationMessage}
+                                </div>
+                            </#if>
                         </td>
                     </tr>
                     <tr>
@@ -44,9 +53,6 @@
                                 <@sf.option value="dm_folder" label="Folder"/>
                                 <@sf.option value="dm_document" label="Document"/>
                             </@sf.select>
-                        </td>
-                        <td>
-                            <@sf.errors path="objTypes"/>
                         </td>
                     </tr>
                     <tr>
@@ -60,9 +66,6 @@
                                 <@sf.option value="NEW" label="NEW"/>
                                 <@sf.option value="PAUSED" label="PAUSED"/>
                             </@sf.select>
-                        </td>
-                        <td>
-                            <@sf.errors path="statuses"/>
                         </td>
                     </tr>
                     <tr>
@@ -84,21 +87,21 @@
                                     <tr>
                                         <td>
                                             <input name="add" value="Add" title="Add" type="button"/>
-<#--                                            <button type="submit" formaction="/rules/${rule.getId()}/rule?accessor=true"-->
-<#--                                                    formmethod="post">Add-->
-<#--                                            </button>-->
+                                            <#--                                            <button type="submit" formaction="/rules/${rule.getId()}/rule?accessor=true"-->
+                                            <#--                                                    formmethod="post">Add-->
+                                            <#--                                            </button>-->
                                         </td>
                                         <td>
                                             <input name="edit" value="Edit" title="Edit" type="button"/>
-<#--                                            <button type="submit" formaction="/rules/${rule.getId()}/rule?accessor=true"-->
-<#--                                                    formmethod="post">Edit-->
-<#--                                            </button>-->
+                                            <#--                                            <button type="submit" formaction="/rules/${rule.getId()}/rule?accessor=true"-->
+                                            <#--                                                    formmethod="post">Edit-->
+                                            <#--                                            </button>-->
                                         </td>
                                         <td>
                                             <input name="remove" value="Remove" title="Remove" type="button"/>
-<#--                                            <button typesubmit="" formaction="/rules/${rule.getId()}/rule?accessor=true"-->
-<#--                                                    formmethod="post">Remove-->
-<#--                                            </button>-->
+                                            <#--                                            <button typesubmit="" formaction="/rules/${rule.getId()}/rule?accessor=true"-->
+                                            <#--                                                    formmethod="post">Remove-->
+                                            <#--                                            </button>-->
                                         </td>
                                     </tr>
                                 </table>
