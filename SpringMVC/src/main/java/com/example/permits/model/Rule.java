@@ -2,7 +2,9 @@ package com.example.permits.model;
 
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Rule extends BaseObjectImpl {
     private final static String ID_PATTERN = "P%07d";
@@ -41,7 +43,7 @@ public class Rule extends BaseObjectImpl {
     } // end getStatuses
 
     public List<Accessor> getAccessors() {
-        return accessors;
+        return accessors.stream().sorted(Comparator.comparing(Accessor::getName)).collect(Collectors.toList());
     } // end getAccessors
 
     public String getName() {
