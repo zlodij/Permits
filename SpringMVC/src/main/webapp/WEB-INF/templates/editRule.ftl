@@ -6,13 +6,20 @@
 </head>
 <body>
 <h2>New rule</h2>
-<input name="home" value="Home" title="Home" type="button" onClick="location.href='/rules'"><br><br>
-
 <@sf.form action="/rules/${id}/rule" method="post" modelAttribute="rule">
     <table border="0">
         <tr>
             <td valign="top">
                 <table border="0">
+                    <tr>
+                        <td>
+                            <div>
+                                <input type="submit">
+                                <input name="home" value="Cancel" title="Cancel" type="button"
+                                       onClick="location.href='/rules'">
+                            </div>
+                        </td>
+                    </tr>
                     <tr>
                         <td>
                             <@sf.label path="name">Name</@sf.label>
@@ -21,7 +28,7 @@
                             <input id="rule_id" name="rule_id" type="hidden" value="${rule.getId()}"/>
                             <@sf.input path="name"/>
                         </td>
-                        <td>
+                        <td width="auto">
                             <#if nameValidationMessage??>
                                 <div style="color:red;font-style:italic;">
                                     ${nameValidationMessage}
@@ -69,72 +76,74 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <div>
-                                <input type="submit">
-                            </div>
+                        <td valign="top">
+                            <@sf.label path="accessors">Accessors</@sf.label>
+                            <input name="add" value="Add" title="Add" type="button"/>
+                            <#--                                            <button type="submit" formaction="/rules/${rule.getId()}/rule?accessor=true"-->
+                            <#--                                                    formmethod="post">Add-->
+                            <#--                                            </button>-->
                         </td>
-                    </tr>
-                </table>
-            </td>
-            <td valign="top">
-                <div>
-                    <table border="0">
-                        <tr>
-                            <td></td>
-                            <td>
-                                <table border="0">
-                                    <tr>
-                                        <td>
-                                            <input name="add" value="Add" title="Add" type="button"/>
-                                            <#--                                            <button type="submit" formaction="/rules/${rule.getId()}/rule?accessor=true"-->
-                                            <#--                                                    formmethod="post">Add-->
-                                            <#--                                            </button>-->
-                                        </td>
-                                        <td>
-                                            <input name="edit" value="Edit" title="Edit" type="button"/>
-                                            <#--                                            <button type="submit" formaction="/rules/${rule.getId()}/rule?accessor=true"-->
-                                            <#--                                                    formmethod="post">Edit-->
-                                            <#--                                            </button>-->
-                                        </td>
-                                        <td>
-                                            <input name="remove" value="Remove" title="Remove" type="button"/>
-                                            <#--                                            <button typesubmit="" formaction="/rules/${rule.getId()}/rule?accessor=true"-->
-                                            <#--                                                    formmethod="post">Remove-->
-                                            <#--                                            </button>-->
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td><@sf.errors path="accessors"/></td>
-                        </tr>
-                        <tr>
-                            <td><@sf.label path="accessors">Accessors</@sf.label></td>
-                            <td>
-                                <table border="0">
-                                    <#if rule.getAccessors()?has_content>
+                        <#if rule.getAccessors()?has_content>
+                            <td colspan="2">
+                                <div style="overflow: auto; width:800px; height:400px;">
+                                    <table border="0">
+                                        <tbody>
+                                        <tr>
+                                            <th>
+                                                Name
+                                            </th>
+                                            <th>
+                                                Permit
+                                            </th>
+                                            <th>
+                                                Alias
+                                            </th>
+                                            <th>
+                                                Svc
+                                            </th>
+                                            <th>
+                                                Org.Levels
+                                            </th>
+                                            <th>
+                                                XPermits
+                                            </th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
                                         <#list rule.getAccessors() as accessor>
                                             <tr>
-                                                <td>
-                                                    <label><input class="radio" name="${rule.getName()}"
-                                                                  id="${accessor.getName()}_checkbox"
-                                                                  type="checkbox"
-                                                                  title="${accessor.getName()}"/>${accessor.getName()}
+                                                <td>${accessor.getName()}</td>
+                                                <td>${accessor.getPermit()}</td>
+                                                <td><label><input class="radio"
+                                                                  name="${accessor.getId()}_isAlias"
+                                                                  id="${accessor.getId()}_isAlias"
+                                                                  type="checkbox" disabled
+                                                                  <#if accessor.isAlias()==true>checked</#if>/>
                                                     </label>
                                                 </td>
+                                                <td><label><input class="radio"
+                                                                  name="${accessor.getId()}_isSvc"
+                                                                  id="${accessor.getId()}_isSvc"
+                                                                  type="checkbox" disabled
+                                                                  <#if accessor.isSvc()==true>checked</#if>/>
+                                                    </label>
+                                                </td>
+                                                <td>${accessor.getOrgLevels()}</td>
+                                                <td>${accessor.getXPermits()}</td>
+                                                <td><a href="#">Edit</a></td>
+                                                <td><a href="#">Delete</a></td>
+                                                <td></td>
                                             </tr>
                                         </#list>
-                                    <#else>
-                                        <tr>
-                                            <td><p>No accessors</p></td>
-                                        </tr>
-                                    </#if>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </td>
-                            <td></td>
-                        </tr>
-                    </table>
-                </div>
+                        <#else>
+                            <td valign="top">No accessors</td>
+                        </#if>
+                    </tr>
+                </table>
             </td>
         </tr>
     </table>
