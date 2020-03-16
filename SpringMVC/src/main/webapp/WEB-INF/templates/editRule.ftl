@@ -78,10 +78,9 @@
                     <tr>
                         <td valign="top">
                             <@sf.label path="accessors">Accessors</@sf.label>
-                            <input name="add" value="Add" title="Add" type="button"/>
-                            <#--                                            <button type="submit" formaction="/rules/${rule.getId()}/rule?accessor=true"-->
-                            <#--                                                    formmethod="post">Add-->
-                            <#--                                            </button>-->
+                            <button type="submit" formaction="/rules/${rule.getId()}/rule?addAccessor=true"
+                                    formmethod="post">Add
+                            </button>
                         </td>
                         <#if rule.getAccessors()?has_content>
                             <td colspan="2">
