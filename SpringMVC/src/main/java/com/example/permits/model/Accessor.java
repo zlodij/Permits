@@ -85,6 +85,7 @@ public class Accessor extends BaseObjectImpl {
     @Override
     public String toString() {
         return "{\"id\": \"" + getId() +
+                "\", \"parentId\": \"" + getParentId() +
                 "\", \"name\": \"" + getName() +
                 "\", \"permit\": \"" + getPermit() +
                 "\", \"alias\": \"" + isAlias() +
