@@ -27,4 +27,6 @@
     </bean>
 
     <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"/>
+
+    <bean id="jsr303Validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 </beans>
