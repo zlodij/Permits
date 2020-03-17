@@ -1,14 +1,19 @@
 package com.example.permits.controller;
 
+import com.example.permits.model.Accessor;
 import com.example.permits.model.BaseObject;
 import com.example.permits.model.Rule;
 import com.example.permits.service.RuleService;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,6 +32,10 @@ public class RuleController {
     @Autowired
     private RuleService service;
 
+    @Autowired
+    @Qualifier("jsr303Validator")
+    private javax.validation.Validator validator;
+
     private Map<String, BaseObject> cache = new HashMap<>();
 
     private Rule getRule(String id) {
@@ -40,6 +49,17 @@ public class RuleController {
         return rule;
     } // end getRule
 
+    private Accessor getAccessor(String id) {
+        Accessor accessor = null;
+        if (cache.containsKey(id)) {
+            BaseObject object = cache.get(id);
+            if (object instanceof Accessor) {
+                accessor = (Accessor) object;
+            }
+        }
+        return accessor;
+    } // end getAccessor
+
     @GetMapping("/hello")
     public String sayHello() {
         return "index";
@@ -52,26 +72,36 @@ public class RuleController {
     } // end getRulesView
 
     @GetMapping("/rules/new")
-    public String getNewRuleView(Model model) {
+    public String getNewRuleForm(Model model) {
         Rule rule = new Rule();
         cache.put(rule.getId(), rule);
 
         model.addAttribute("rule", rule);
         return "redirect:/rules/" + rule.getId() + "/rule";
-    } // end getNewRuleView
+    } // end getNewRuleForm
 
     @GetMapping("/rules/{id}/rule")
-    public String getEditRuleView(@PathVariable("id") String id, Model model) {
+    public String getRuleForm(@PathVariable("id") String id, Model model) {
         model.addAttribute("rule", getRule(id));
         return "editRule";
-    } // end getEditRuleView
+    } // end getRuleForm
+
+    @GetMapping("/rules/{id}/accessor")
+    public String getAccessorForm(@PathVariable("id") String id, Model model) {
+        model.addAttribute("accessor", getAccessor(id));
+        return "editAccessor";
+    } // end getAccessorForm
 
     @PostMapping("/rules/{id}/rule")
-    public String sendEditRuleForm(@PathVariable("id") String id,
-                                   @RequestParam @Valid @NotBlank String name,
-                                   @RequestParam @Valid @Length(max = 32) String description,
-                                   @RequestParam String objTypes,
-                                   @RequestParam String statuses) {
+    public String submitRuleForm(@PathVariable("id") String id,
+                                 @RequestParam @Valid @NotBlank String name,
+                                 @RequestParam @Valid @Length(max = 32) String description,
+                                 @RequestParam String objTypes,
+                                 @RequestParam String statuses,
+                                 @RequestParam(required = false) boolean addAccessor,
+                                 Model model) {
+        String result;
+
         Rule rule = getRule(id);
 
         rule.setName(name);
@@ -79,39 +109,85 @@ public class RuleController {
         rule.setObjTypes(objTypes);
         rule.setStatuses(statuses);
 
-        service.addRule(rule);
-        return "redirect:/rules";
+        if (addAccessor) {
+            Accessor accessor = new Accessor();
+            accessor.setParentId(rule.getId());
+            cache.put(accessor.getId(), accessor);
+            model.addAttribute("accessor", accessor);
+
+            result = "redirect:/rules/" + accessor.getId() + "/accessor";
+        } else {
+            service.addRule(rule);
+            result = "redirect:/rules";
+        }
+
+        return result;
     } // end sendEditRuleForm
+
+    @PostMapping("/rules/{id}/accessor")
+    public String submitAccessorForm(@PathVariable("id") String id,
+                                     @ModelAttribute Accessor accessor,
+                                     Model model) {
+        String result;
+
+        SpringValidatorAdapter springValidator = new SpringValidatorAdapter(validator);
+        BindingResult bindingResult = new BeanPropertyBindingResult(accessor, "accessor");
+        springValidator.validate(accessor, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            String key = BindingResult.class.getCanonicalName() + ".accessor";
+            model.addAttribute(key, bindingResult);
+            result = "editAccessor";
+        } else {
+            Rule rule = getRule(accessor.getParentId());
+            if (rule != null) {
+                List<Accessor> accessors = rule.getAccessors();
+                accessors.add(accessor);
+                rule.setAccessors(accessors);
+                result = "redirect:/rules/" + rule.getId() + "/rule";
+                model.addAttribute("rule", rule);
+            } else {
+                // TODO Redirect to error page!
+                result = "redirect:/error";
+            }
+        }
+
+        return result;
+    } // end submitAccessorForm
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ModelAndView errorHandler(ConstraintViolationException exception, WebRequest request) {
-        String id = request.getParameter("rule_id");
-
-        Rule rule = getRule(id);
-
         ModelAndView modelAndView = new ModelAndView();
 
-        Rule finalRule = rule;
-        request.getParameterNames().forEachRemaining(name -> {
-            try {
-                BeanUtils.setProperty(finalRule, name, request.getParameter(name));
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        Set<ConstraintViolation<?>> violations = exception.getConstraintViolations();
-        violations.forEach(violation -> {
-                    if ("sendEditRuleForm.arg1".equals(violation.getPropertyPath().toString())) {
-                        modelAndView.addObject("nameValidationMessage", violation.getMessage());
-                    } else if ("sendEditRuleForm.arg2".equals(violation.getPropertyPath().toString())) {
-                        modelAndView.addObject("descriptionValidationMessage", violation.getMessage());
-                    }
+        String id = request.getParameter("rule_id");
+        if (id != null) {
+            Rule rule = getRule(id);
+            request.getParameterNames().forEachRemaining(name -> {
+                try {
+                    BeanUtils.setProperty(rule, name, request.getParameter(name));
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
                 }
-        );
+            });
 
-        modelAndView.addObject("rule", rule);
-        modelAndView.setViewName("editRule");
+            Set<ConstraintViolation<?>> violations = exception.getConstraintViolations();
+            violations.forEach(violation -> {
+                        if ("submitRuleForm.arg1".equals(violation.getPropertyPath().toString())) {
+                            modelAndView.addObject("nameValidationMessage", violation.getMessage());
+                        } else if ("submitRuleForm.arg2".equals(violation.getPropertyPath().toString())) {
+                            modelAndView.addObject("descriptionValidationMessage", violation.getMessage());
+                        }
+                    }
+            );
+
+            modelAndView.addObject("rule", rule);
+            modelAndView.setViewName("editRule");
+        } else {
+            // TODO Redirect to error page!
+            modelAndView.addObject("exception", exception);
+            modelAndView.setViewName("error");
+        }
+
         return modelAndView;
     } // end errorHandler
 } // end RuleController
