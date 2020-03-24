@@ -56,10 +56,7 @@
                             <@sf.label path="objTypes">Types</@sf.label>
                         </td>
                         <td>
-                            <@sf.select path="objTypes">
-                                <@sf.option value="dm_folder" label="Folder"/>
-                                <@sf.option value="dm_document" label="Document"/>
-                            </@sf.select>
+                            <a href="/rules/${id}/rule/objTypes">Edit</a>&nbsp;${rule.getObjTypes()}
                         </td>
                     </tr>
                     <tr>
@@ -67,12 +64,7 @@
                             <@sf.label path="statuses">Statuses</@sf.label>
                         </td>
                         <td>
-                            <@sf.select path="statuses">
-                                <@sf.option value="" label=""/>
-                                <@sf.option value="ACTIVE" label="ACTIVE"/>
-                                <@sf.option value="NEW" label="NEW"/>
-                                <@sf.option value="PAUSED" label="PAUSED"/>
-                            </@sf.select>
+                            <a href="/rules/${id}/rule/statuses">Edit</a>&nbsp;${rule.getStatuses()}
                         </td>
                     </tr>
                     <tr>
@@ -117,14 +109,14 @@
                                                                   name="${accessor.getId()}_isAlias"
                                                                   id="${accessor.getId()}_isAlias"
                                                                   type="checkbox" disabled
-                                                                  <#if accessor.isAlias()==true>checked</#if>/>
+                                                                  <#if accessor.isAlias()>checked</#if>/>
                                                     </label>
                                                 </td>
                                                 <td><label><input class="radio"
                                                                   name="${accessor.getId()}_isSvc"
                                                                   id="${accessor.getId()}_isSvc"
                                                                   type="checkbox" disabled
-                                                                  <#if accessor.isSvc()==true>checked</#if>/>
+                                                                  <#if accessor.isSvc()>checked</#if>/>
                                                     </label>
                                                 </td>
                                                 <td>${accessor.getOrgLevels()}</td>
