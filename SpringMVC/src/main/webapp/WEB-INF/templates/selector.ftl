@@ -8,7 +8,7 @@
         let value = "";
         let option;
         for (option of select) {
-            if(value.length > 0) value += ",";
+            if (value.length > 0) value += ",";
             value += option.value;
         }
 
@@ -37,7 +37,7 @@
 
     // Copies selected options from input select to output
     function copySelectedOptions(input, output) {
-        const  selected = getSelectOptions(input);
+        const selected = getSelectOptions(input);
 
         let option;
         for (option of selected) {
@@ -52,7 +52,7 @@
 
         let option;
         for (option of select.options) {
-            if(option.selected) {
+            if (option.selected) {
                 result.push(option);
             }
         }
@@ -83,9 +83,11 @@
                     <tr>
                         <td>
                             <select id="listIn" name="listIn" multiple size="10" style="width:200px">>
-                                <#list listAvailable as row>
-                                    <option value="${row}">${row}</option>
-                                </#list>
+                                <#if listAvailable?has_content>
+                                    <#list listAvailable as row>
+                                        <option value="${row}">${row}</option>
+                                    </#list>
+                                </#if>
                             </select>
                         </td>
                         <td>
@@ -104,10 +106,13 @@
                         </td>
                         <td>
                             <select id="listOut" name="listOut" multiple size="10" style="width:200px">
-                                <#list listSelected as row>
-                                    <option value="${row}">${row}</option>
-                                </#list>
+                                <#if listSelected?has_content>
+                                    <#list listSelected as row>
+                                        <option value="${row}">${row}</option>
+                                    </#list>
+                                </#if>
                             </select>
+                        </td>
                     </tr>
                 </table>
             </td>
