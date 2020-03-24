@@ -4,6 +4,9 @@ import com.example.permits.model.Accessor;
 import com.example.permits.model.BaseObject;
 import com.example.permits.model.Rule;
 import com.example.permits.service.RuleService;
+import com.example.permits.utils.dict.DictDataProvider;
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,9 @@ public class RuleController {
     @Autowired
     @Qualifier("jsr303Validator")
     private javax.validation.Validator validator;
+
+    private final static String ATTR_STATUSES = "statuses";
+    private final static String ATTR_OBJ_TYPES = "objTypes";
 
     private Map<String, BaseObject> cache = new HashMap<>();
 
@@ -83,8 +89,33 @@ public class RuleController {
     @GetMapping("/rules/{id}/rule")
     public String getRuleForm(@PathVariable("id") String id, Model model) {
         model.addAttribute("rule", getRule(id));
+        model.addAttribute("dictObjTypes", DictDataProvider.getInstance().getSupportedTypes());
         return "editRule";
     } // end getRuleForm
+
+    @GetMapping("/rules/{id}/rule/statuses")
+    public String getStatusesForm(@PathVariable("id") String id, Model model) {
+        Rule rule = getRule(id);
+
+        model.addAttribute("title", "Status");
+        model.addAttribute("attribute", ATTR_STATUSES);
+
+        model.addAttribute("listSelected", Splitter.on(",").trimResults().splitToList(rule.getStatuses()));
+        model.addAttribute("listAvailable", DictDataProvider.getInstance().getAvailableStatuses(rule.getObjTypes(), this.getClass().getCanonicalName()));
+        return "selector";
+    } // end getStatusesForm
+
+    @GetMapping("/rules/{id}/rule/objTypes")
+    public String getObjTypesForm(@PathVariable("id") String id, Model model) {
+        Rule rule = getRule(id);
+
+        model.addAttribute("title", "Object Type");
+        model.addAttribute("attribute", ATTR_OBJ_TYPES);
+
+        model.addAttribute("listSelected", Splitter.on(",").trimResults().splitToList(rule.getObjTypes()));
+        model.addAttribute("listAvailable", DictDataProvider.getInstance().getSupportedTypes());
+        return "selector";
+    } // end getStatusesForm
 
     @GetMapping("/rules/{id}/accessor")
     public String getAccessorForm(@PathVariable("id") String id, Model model) {
@@ -154,6 +185,32 @@ public class RuleController {
 
         return result;
     } // end submitAccessorForm
+
+    @PostMapping("/rules/{id}/rule/selector")
+    public String submitSelectorForm(@PathVariable("id") String id,
+                                     @RequestParam ArrayList<String> selected,
+                                     @RequestParam String attribute,
+                                     Model model) {
+        String result;
+
+        Rule rule = getRule(id);
+        if (rule != null) {
+            //TODO collect values
+            if (ATTR_STATUSES.equals(attribute)) {
+                rule.setStatuses(Joiner.on(", ").skipNulls().join(selected));
+            } else if (ATTR_OBJ_TYPES.equals(attribute)) {
+                rule.setObjTypes(Joiner.on(", ").skipNulls().join(selected));
+            }
+
+            result = "redirect:/rules/" + rule.getId() + "/rule";
+            model.addAttribute("rule", rule);
+        } else {
+            // TODO Redirect to error page!
+            result = "redirect:/error";
+        }
+
+        return result;
+    } // end submitSelectorForm
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ModelAndView errorHandler(ConstraintViolationException exception, WebRequest request) {
