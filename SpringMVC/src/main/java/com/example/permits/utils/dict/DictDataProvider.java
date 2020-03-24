@@ -66,7 +66,6 @@ public final class DictDataProvider {
                 listRoles = Arrays.stream(data.rolesAll).sorted().collect(Collectors.toList());
                 // Get an array of all supported aliases and convert it into the list
                 listAliases = Arrays.stream(data.aliasesAll).sorted().collect(Collectors.toList());
-                ;
 
                 // Populate map with available statuses
                 for (StatusObj statusObj : data.statusesAll) {
