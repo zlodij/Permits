@@ -118,8 +118,27 @@ public class RuleController {
     } // end getStatusesForm
 
     @GetMapping("/rules/{id}/accessor")
-    public String getAccessorForm(@PathVariable("id") String id, Model model) {
-        model.addAttribute("accessor", getAccessor(id));
+    public String getAccessorForm(@PathVariable("id") String id,
+                                  @RequestParam(required = false) String parentId,
+                                  Model model) {
+        Accessor accessor = getAccessor(id);
+        if (accessor == null) {
+            if (parentId != null && parentId.length() > 0) {
+                Rule rule = getRule(parentId);
+                Optional<Accessor> result = rule.getAccessors().stream().filter(element -> element.getId().equals(id)).findFirst();
+                if (result.isPresent()) {
+                    accessor = result.get();
+                    cache.put(id, accessor);
+                } else {
+                    // TODO Redirect to error page!
+                    return  "redirect:/error";
+                }
+            } else {
+                // TODO Redirect to error page!
+                return  "redirect:/error";
+            }
+        }
+        model.addAttribute("accessor", accessor);
         return "editAccessor";
     } // end getAccessorForm
 
@@ -127,18 +146,13 @@ public class RuleController {
     public String submitRuleForm(@PathVariable("id") String id,
                                  @RequestParam @Valid @NotBlank String name,
                                  @RequestParam @Valid @Length(max = 32) String description,
-                                 @RequestParam String objTypes,
-                                 @RequestParam String statuses,
                                  @RequestParam(required = false) boolean addAccessor,
                                  Model model) {
         String result;
 
         Rule rule = getRule(id);
-
         rule.setName(name);
         rule.setDescription(description);
-        rule.setObjTypes(objTypes);
-        rule.setStatuses(statuses);
 
         if (addAccessor) {
             Accessor accessor = new Accessor();
