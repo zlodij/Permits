@@ -14,7 +14,7 @@ public class Rule extends BaseObjectImpl {
     private String description;
     private String objTypes;
     private String statuses;
-    private List<Accessor> accessors;
+    private List<Accessor> accessors = new ArrayList<>();
 
     public Rule() {
         this("", "", "", "", new ArrayList<>());
@@ -22,11 +22,11 @@ public class Rule extends BaseObjectImpl {
 
     public Rule(String name, String description, String objTypes, String statuses, List<Accessor> accessors) {
         super();
-        this.name = name;
-        this.description = description;
-        this.objTypes = objTypes;
-        this.statuses = statuses;
-        this.accessors = accessors;
+        setName(name);
+        setDescription(description);
+        setObjTypes(objTypes);
+        setStatuses(statuses);
+        setAccessors(accessors);
     } // end constructor
 
     @Override
@@ -63,7 +63,9 @@ public class Rule extends BaseObjectImpl {
     } // end setName
 
     public void setAccessors(List<Accessor> accessors) {
-        this.accessors = accessors;
+        this.accessors.clear();
+        this.accessors.addAll(accessors);
+        getAccessors().forEach(accessor -> accessor.setParentId(getId()));
     } // end setAccessors
 
     public void setObjTypes(String objTypes) {
