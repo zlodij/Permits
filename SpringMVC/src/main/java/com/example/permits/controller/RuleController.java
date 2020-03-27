@@ -131,11 +131,11 @@ public class RuleController {
                     cache.put(id, accessor);
                 } else {
                     // TODO Redirect to error page!
-                    return  "redirect:/error";
+                    return "redirect:/error";
                 }
             } else {
                 // TODO Redirect to error page!
-                return  "redirect:/error";
+                return "redirect:/error";
             }
         }
         model.addAttribute("accessor", accessor);
@@ -186,11 +186,12 @@ public class RuleController {
         } else {
             Rule rule = getRule(accessor.getParentId());
             if (rule != null) {
-                List<Accessor> accessors = rule.getAccessors();
+                List<Accessor> accessors = rule.getAccessors().stream().filter(item -> !item.getId().equals(accessor.getId())).collect(Collectors.toList());
                 accessors.add(accessor);
                 rule.setAccessors(accessors);
                 result = "redirect:/rules/" + rule.getId() + "/rule";
                 model.addAttribute("rule", rule);
+                cache.put(id, accessor);
             } else {
                 // TODO Redirect to error page!
                 result = "redirect:/error";
