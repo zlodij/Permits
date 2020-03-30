@@ -3,7 +3,7 @@
 
 <script language="JavaScript" type="text/javascript">
     function onEdit() {
-        var rules = document.getElementById("listRules");
+        const rules = document.getElementById("listRules");
         if (rules.selectedIndex > 0) {
             location.href = '/rules/' + rules.options[rules.selectedIndex].value + '/rule';
         }
