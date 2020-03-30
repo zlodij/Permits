@@ -138,6 +138,8 @@ public class RuleController {
                 return "redirect:/error";
             }
         }
+        model.addAttribute("listRoles", DictDataProvider.getInstance().getSupportedRoles());
+        model.addAttribute("listAliases", DictDataProvider.getInstance().getSupportedAliases());
         model.addAttribute("accessor", accessor);
         return "editAccessor";
     } // end getAccessorForm
@@ -182,6 +184,8 @@ public class RuleController {
         if (bindingResult.hasErrors()) {
             String key = BindingResult.class.getCanonicalName() + ".accessor";
             model.addAttribute(key, bindingResult);
+            model.addAttribute("listRoles", DictDataProvider.getInstance().getSupportedRoles());
+            model.addAttribute("listAliases", DictDataProvider.getInstance().getSupportedAliases());
             result = "editAccessor";
         } else {
             Rule rule = getRule(accessor.getParentId());
