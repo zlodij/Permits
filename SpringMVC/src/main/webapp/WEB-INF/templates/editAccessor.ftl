@@ -12,7 +12,8 @@
 
     function onClickAlias() {
         const checked = document.getElementById("alias").checked;
-        // alert(document.getElementById("alias").checked);
+        document.getElementById("alias").value = checked;
+        //alert(document.getElementById("alias").value);
         document.getElementById("div-role").hidden = checked;
         document.getElementById("div-alias").hidden = !checked;
 
@@ -23,6 +24,8 @@
     } // end onClickAlias
 
     function onClickSvc() {
+        const checked = document.getElementById("svc").checked;
+        document.getElementById("svc").value = checked;
         const inputs = document.getElementsByName("orgLevels");
 
         let input;
@@ -57,9 +60,9 @@
                 <div id="div-role" <#if accessor.isAlias()>hidden</#if>>
                     <#if listRoles?has_content>
                         <select id="listRoles" onchange="onSelect(this)">
-                            <option value="" selected/>
+                            <option value=""/>
                             <#list listRoles as role>
-                                <option value="${role}">${role}</option>
+                                <option value="${role}" <#if role == accessor.name>selected</#if>>${role}</option>
                             </#list>
                         </select>
                     <#else>
@@ -70,10 +73,9 @@
                 <div id="div-alias" <#if !accessor.isAlias()>hidden</#if>>
                     <#if listAliases?has_content>
                         <select id="listAliases" onchange="onSelect(this)">
-                            <#--                            <option value="NONE">--- Select ---</option>-->
-                            <option value="" selected/>
+                            <option value=""/>
                             <#list listAliases as alias>
-                                <option value="${alias}">${alias}</option>
+                                <option value="${alias}" <#if alias == accessor.name>selected</#if>>${alias}</option>
                             </#list>
                         </select>
                     <#else>
