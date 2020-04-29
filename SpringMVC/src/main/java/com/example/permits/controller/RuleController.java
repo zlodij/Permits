@@ -73,9 +73,19 @@ public class RuleController {
 
     @GetMapping("/rules")
     public String getRulesView(Model model) {
-        model.addAttribute("rules", service.getAll().stream().sorted(Comparator.comparing(Rule::getName)).collect(Collectors.toCollection(ArrayList::new)));
+        model.addAttribute("rules", service.getAll().stream()
+                .sorted(Comparator.comparing(Rule::getName))
+                .collect(Collectors.toCollection(ArrayList::new)));
         return "/rules";
     } // end getRulesView
+
+    @PostMapping("/rules/delete")
+    public String deleteRule(@RequestParam("rule_id") String id) {
+        service.deleteRule(id);
+        cache.remove(id);
+
+        return "redirect:/rules";
+    } // end deleteRule
 
     @GetMapping("/rules/new")
     public String getNewRuleForm(Model model) {
