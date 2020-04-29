@@ -125,7 +125,9 @@ public class RuleController {
         if (accessor == null) {
             if (parentId != null && parentId.length() > 0) {
                 Rule rule = getRule(parentId);
-                Optional<Accessor> result = rule.getAccessors().stream().filter(element -> element.getId().equals(id)).findFirst();
+                Optional<Accessor> result = rule.getAccessors().stream()
+                        .filter(element -> element.getId().equals(id))
+                        .findFirst();
                 if (result.isPresent()) {
                     accessor = result.get();
                     cache.put(id, accessor);
@@ -139,7 +141,8 @@ public class RuleController {
             }
         }
         model.addAttribute("listRoles", DictDataProvider.getInstance().getSupportedRoles());
-        model.addAttribute("listAliases", DictDataProvider.getInstance().getSupportedAliases());
+        model.addAttribute("listSvcAliases", DictDataProvider.getInstance().getSupportedAliases(true));
+        model.addAttribute("listNotSvcAliases", DictDataProvider.getInstance().getSupportedAliases(false));
         model.addAttribute("accessor", accessor);
         return "editAccessor";
     } // end getAccessorForm
@@ -185,7 +188,8 @@ public class RuleController {
             String key = BindingResult.class.getCanonicalName() + ".accessor";
             model.addAttribute(key, bindingResult);
             model.addAttribute("listRoles", DictDataProvider.getInstance().getSupportedRoles());
-            model.addAttribute("listAliases", DictDataProvider.getInstance().getSupportedAliases());
+            model.addAttribute("listSvcAliases", DictDataProvider.getInstance().getSupportedAliases(true));
+            model.addAttribute("listNotSvcAliases", DictDataProvider.getInstance().getSupportedAliases(false));
             result = "editAccessor";
         } else {
             Rule rule = getRule(accessor.getParentId());
