@@ -31,9 +31,13 @@ public final class DictDataProvider {
      */
     private List<String> listRoles = new ArrayList<>();
     /**
-     * List of supported aliases
+     * List of supported service aliases
      */
-    private List<String> listAliases = new ArrayList<>();
+    private List<String> listSvcAliases = new ArrayList<>();
+    /**
+     * List of supported not-service aliases
+     */
+    private List<String> listNoSvcAliases = new ArrayList<>();
     /**
      * Contains enumeration of lists with available statuses mapped by combination of type and service attributes
      */
@@ -64,8 +68,17 @@ public final class DictDataProvider {
                 listTypes = Arrays.stream(data.typesAll).sorted().collect(Collectors.toList());
                 // Get an array of all supported user roles and convert it into the list
                 listRoles = Arrays.stream(data.rolesAll).sorted().collect(Collectors.toList());
-                // Get an array of all supported aliases and convert it into the list
-                listAliases = Arrays.stream(data.aliasesAll).sorted().collect(Collectors.toList());
+
+                // Get an array of all supported aliases and convert it into two separated lists depending on service sign of every item
+                List<AliasObj> listAliasesAll = Arrays.stream(data.aliasesAll).collect(Collectors.toList());
+                listSvcAliases = listAliasesAll.stream()
+                        .filter(aliasObj -> aliasObj.service)
+                        .map(aliasObj -> aliasObj.alias)
+                        .sorted().collect(Collectors.toList());
+                listNoSvcAliases = listAliasesAll.stream()
+                        .filter(aliasObj -> !aliasObj.service)
+                        .map(aliasObj -> aliasObj.alias)
+                        .sorted().collect(Collectors.toList());
 
                 // Populate map with available statuses
                 for (StatusObj statusObj : data.statusesAll) {
@@ -126,10 +139,11 @@ public final class DictDataProvider {
     /**
      * Returns a {@code List} of aliases supported by application.
      *
-     * @return a {@code List} of aliases
+     * @param service whether aliases should have service sign or not
+     * @return a {@code List} of service or not-service aliases
      */
-    public List<String> getSupportedAliases() {
-        return listAliases;
+    public List<String> getSupportedAliases(boolean service) {
+        return service ? listSvcAliases : listNoSvcAliases;
     } // end getSupportedAliases
 
     /**
