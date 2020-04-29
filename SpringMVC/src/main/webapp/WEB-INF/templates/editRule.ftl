@@ -121,9 +121,14 @@
                                                 </td>
                                                 <td>${accessor.getOrgLevels()?upper_case}</td>
                                                 <td>${accessor.getXPermits()}</td>
-                                                <td><a href="/rules/${accessor.getId()}/accessor?parentId=${accessor.getParentId()}">Edit</a></td>
-                                                <td><a href="#">Delete</a></td>
-                                                <td></td>
+                                                <td><input name="add_${accessor.getId()}" value="Edit" title="Edit"
+                                                           type="button"
+                                                           onClick="location.href='/rules/${accessor.getId()}/accessor?parentId=${accessor.getParentId()}'">
+                                                </td>
+                                                <td><input name="delete_${accessor.getId()}" value="Delete"
+                                                           title="Delete" type="submit"
+                                                           formaction="/rules/${rule.getId()}/rule?deleteAccessor=${accessor.getId()}">
+                                                </td>
                                             </tr>
                                         </#list>
                                         </tbody>
