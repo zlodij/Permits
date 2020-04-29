@@ -46,4 +46,8 @@ public class RuleService {
     public Collection<Rule> getAll() {
         return rules.values();
     } // end getAll
+
+    public Rule deleteRule(String id) {
+        return rules.remove(id);
+    } // end deleteRule
 } // end RuleService
