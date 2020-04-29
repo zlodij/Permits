@@ -19,5 +19,5 @@ class DictObj {
     /**
      * Refers on "aliases-all" array of strings
      */
-    String[] aliasesAll;
+    AliasObj[] aliasesAll;
 } // end DictObj
