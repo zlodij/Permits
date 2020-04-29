@@ -152,6 +152,7 @@ public class RuleController {
                                  @RequestParam @Valid @NotBlank String name,
                                  @RequestParam @Valid @Length(max = 32) String description,
                                  @RequestParam(required = false) boolean addAccessor,
+                                 @RequestParam(required = false) String deleteAccessor,
                                  Model model) {
         String result;
 
@@ -166,6 +167,11 @@ public class RuleController {
             model.addAttribute("accessor", accessor);
 
             result = "redirect:/rules/" + accessor.getId() + "/accessor";
+        } else if (deleteAccessor != null && deleteAccessor.length() > 0) {
+            List<Accessor> accessors = rule.getAccessors().stream().filter(item -> !item.getId().equals(deleteAccessor)).collect(Collectors.toList());
+            rule.setAccessors(accessors);
+            model.addAttribute("rule", rule);
+            result = "editRule";
         } else {
             service.addRule(rule);
             result = "redirect:/rules";
