@@ -11,21 +11,36 @@
     } // end updateResultHidden
 
     function onClickAlias() {
-        const checked = document.getElementById("alias").checked;
-        document.getElementById("alias").value = checked;
+        const isAliasChecked = document.getElementById("alias").checked;
+        const isSvcChecked = document.getElementById("svc").checked;
+        document.getElementById("alias").value = isAliasChecked;
         //alert(document.getElementById("alias").value);
-        document.getElementById("div-role").hidden = checked;
-        document.getElementById("div-alias").hidden = !checked;
+        document.getElementById("div-role").hidden = isAliasChecked;
+        document.getElementById("div-svc-alias").hidden = !isAliasChecked || !isSvcChecked;
+        document.getElementById("div-not-svc-alias").hidden = !isAliasChecked || isSvcChecked;
 
-        document.getElementById("svc").disabled = !checked;
+        document.getElementById("svc").disabled = !isAliasChecked;
 
-        const select = checked ? document.getElementById("listAliases") : document.getElementById("listRoles");
+        const select = !isAliasChecked
+            ? document.getElementById("listRoles")
+            : (isSvcChecked
+                    ? document.getElementById("listSvcAliases")
+                    : document.getElementById("listNotSvcAliases")
+            );
         onSelect(select);
     } // end onClickAlias
 
     function onClickSvc() {
-        const checked = document.getElementById("svc").checked;
-        document.getElementById("svc").value = checked;
+        const isSvcChecked = document.getElementById("svc").checked;
+        document.getElementById("svc").value = isSvcChecked;
+        document.getElementById("div-svc-alias").hidden = !isSvcChecked;
+        document.getElementById("div-not-svc-alias").hidden = isSvcChecked;
+
+        const select = isSvcChecked
+            ? document.getElementById("listSvcAliases")
+            : document.getElementById("listNotSvcAliases");
+        onSelect(select);
+
         const inputs = document.getElementsByName("orgLevels");
 
         let input;
@@ -69,12 +84,23 @@
                         <p>No roles available</p>
                     </#if>
                 </div>
-                <#--                <div id="div-role" hidden="${accessor.isAlias()?c}">-->
-                <div id="div-alias" <#if !accessor.isAlias()>hidden</#if>>
-                    <#if listAliases?has_content>
-                        <select id="listAliases" onchange="onSelect(this)">
+                <div id="div-svc-alias" <#if !accessor.isAlias() || !accessor.isSvc()>hidden</#if>>
+                    <#if listSvcAliases?has_content>
+                        <select id="listSvcAliases" onchange="onSelect(this)">
                             <option value=""/>
-                            <#list listAliases as alias>
+                            <#list listSvcAliases as alias>
+                                <option value="${alias}" <#if alias == accessor.name>selected</#if>>${alias}</option>
+                            </#list>
+                        </select>
+                    <#else>
+                        <p>No aliases available</p>
+                    </#if>
+                </div>
+                <div id="div-not-svc-alias" <#if !accessor.isAlias() || accessor.isSvc()>hidden</#if>>
+                    <#if listNotSvcAliases?has_content>
+                        <select id="listNotSvcAliases" onchange="onSelect(this)">
+                            <option value=""/>
+                            <#list listNotSvcAliases as alias>
                                 <option value="${alias}" <#if alias == accessor.name>selected</#if>>${alias}</option>
                             </#list>
                         </select>
