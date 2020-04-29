@@ -683,51 +683,189 @@
     "bnk_ops_lm_central"
   ],
   "aliases-all": [
-    "bnk_gcc_pam1",
-    "bnk_gcc_pam2",
-    "bnk-ca-conf1",
-    "bnk-ca-conf2",
-    "bnk-ca-lm",
-    "bnk-ca-perf",
-    "bnk-cc-conf1",
-    "bnk-cc-conf2",
-    "bnk-cc-conf3",
-    "bnk-cc-lm",
-    "bnk-cc-perf",
-    "bnk-cp-lm",
-    "bnk-cp-perf",
-    "bnk-do-lm",
-    "bnk-do-perf",
-    "bnk-fa-lm",
-    "bnk-fa-perf",
-    "bnk-fo-lm",
-    "bnk-fo-perf",
-    "bnk-fo-conf1",
-    "bnk-fo-conf2",
-    "bnk-fs-conf1",
-    "bnk-fs-conf2",
-    "bnk-fs-lm",
-    "bnk-fs-perf",
-    "bnk-ls-conf1",
-    "bnk-ls-conf2",
-    "bnk-ls-lm",
-    "bnk-ls-perf",
-    "bnk-mo-lm",
-    "bnk-mo-perf",
-    "bnk-pd-perf",
-    "bnk-pl-perf",
-    "bnk-rm-conf1",
-    "bnk-rm-conf2",
-    "bnk-rm-lm",
-    "bnk-rm-perf",
-    "bnk-op-lm",
-    "bnk-op-perf",
-    "bnk-sale-conf1",
-    "bnk-sale-conf2",
-    "bnk-sale-lm",
-    "bnk-sale-perf",
-    "bnk-scaner",
-    "bnk-secretary",
-    "bnk-voter"
+    {
+      "alias": "bnk_gcc_pam1",
+      "service": false
+    },
+    {
+      "alias": "bnk_gcc_pam2",
+      "service": false
+    },
+    {
+      "alias": "bnk-ca-conf1",
+      "service": true
+    },
+    {
+      "alias": "bnk-ca-conf2",
+      "service": true
+    },
+    {
+      "alias": "bnk-ca-lm",
+      "service": true
+    },
+    {
+      "alias": "bnk-ca-perf",
+      "service": true
+    },
+    {
+      "alias": "bnk-cc-conf1",
+      "service": true
+    },
+    {
+      "alias": "bnk-cc-conf2",
+      "service": true
+    },
+    {
+      "alias": "bnk-cc-conf3",
+      "service": true
+    },
+    {
+      "alias": "bnk-cc-lm",
+      "service": true
+    },
+    {
+      "alias": "bnk-cc-perf",
+      "service": true
+    },
+    {
+      "alias": "bnk-cp-lm",
+      "service": true
+    },
+    {
+      "alias": "bnk-cp-perf",
+      "service": true
+    },
+    {
+      "alias": "bnk-do-lm",
+      "service": true
+    },
+    {
+      "alias": "bnk-do-perf",
+      "service": true
+    },
+    {
+      "alias": "bnk-fa-lm",
+      "service": true
+    },
+    {
+      "alias": "bnk-fa-perf",
+      "service": true
+    },
+    {
+      "alias": "bnk-fo-lm",
+      "service": true
+    },
+    {
+      "alias": "bnk-fo-perf",
+      "service": true
+    },
+    {
+      "alias": "bnk-fo-conf1",
+      "service": true
+    },
+    {
+      "alias": "bnk-fo-conf2",
+      "service": true
+    },
+    {
+      "alias": "bnk-fs-conf1",
+      "service": true
+    },
+    {
+      "alias": "bnk-fs-conf2",
+      "service": true
+    },
+    {
+      "alias": "bnk-fs-lm",
+      "service": true
+    },
+    {
+      "alias": "bnk-fs-perf",
+      "service": true
+    },
+    {
+      "alias": "bnk-ls-conf1",
+      "service": true
+    },
+    {
+      "alias": "bnk-ls-conf2",
+      "service": true
+    },
+    {
+      "alias": "bnk-ls-lm",
+      "service": true
+    },
+    {
+      "alias": "bnk-ls-perf",
+      "service": true
+    },
+    {
+      "alias": "bnk-mo-lm",
+      "service": true
+    },
+    {
+      "alias": "bnk-mo-perf",
+      "service": true
+    },
+    {
+      "alias": "bnk-pd-perf",
+      "service": true
+    },
+    {
+      "alias": "bnk-pl-perf",
+      "service": true
+    },
+    {
+      "alias": "bnk-rm-conf1",
+      "service": true
+    },
+    {
+      "alias": "bnk-rm-conf2",
+      "service": true
+    },
+    {
+      "alias": "bnk-rm-lm",
+      "service": true
+    },
+    {
+      "alias": "bnk-rm-perf",
+      "service": true
+    },
+    {
+      "alias": "bnk-op-lm",
+      "service": true
+    },
+    {
+      "alias": "bnk-op-perf",
+      "service": true
+    },
+    {
+      "alias": "bnk-sale-conf1",
+      "service": true
+    },
+    {
+      "alias": "bnk-sale-conf2",
+      "service": true
+    },
+    {
+      "alias": "bnk-sale-lm",
+      "service": true
+    },
+    {
+      "alias": "bnk-sale-perf",
+      "service": true
+    },
+    {
+      "alias": "bnk-scaner",
+      "service": true
+    },
+    {
+      "alias": "bnk-secretary",
+      "service": true
+    },
+    {
+      "alias": "bnk-voter",
+      "service": true
+    }
   ]
 }
