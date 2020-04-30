@@ -71,6 +71,12 @@ public class RuleController {
         return "index";
     } // end sayHello
 
+    @GetMapping("/error")
+    public String showError(@RequestParam String errorMessage, Model model) {
+        model.addAttribute("errorMessage", errorMessage);
+        return "error";
+    } // end showError
+
     @GetMapping("/rules")
     public String getRulesView(Model model) {
         model.addAttribute("rules", service.getAll().stream()
@@ -142,11 +148,11 @@ public class RuleController {
                     accessor = result.get();
                     cache.put(id, accessor);
                 } else {
-                    // TODO Redirect to error page!
+                    model.addAttribute("errorMessage", "Failed to find Rule with ID '" + parentId + "'!");
                     return "redirect:/error";
                 }
             } else {
-                // TODO Redirect to error page!
+                model.addAttribute("errorMessage", "Invalid parent Rule ID '" + parentId + "' specified!");
                 return "redirect:/error";
             }
         }
@@ -217,7 +223,7 @@ public class RuleController {
                 model.addAttribute("rule", rule);
                 cache.put(id, accessor);
             } else {
-                // TODO Redirect to error page!
+                model.addAttribute("errorMessage", "Failed to find Rule with ID '" + accessor.getParentId() + "'!");
                 result = "redirect:/error";
             }
         }
@@ -244,7 +250,7 @@ public class RuleController {
             result = "redirect:/rules/" + rule.getId() + "/rule";
             model.addAttribute("rule", rule);
         } else {
-            // TODO Redirect to error page!
+            model.addAttribute("errorMessage", "Failed to find Rule with ID '" + id + "'!");
             result = "redirect:/error";
         }
 
@@ -280,7 +286,7 @@ public class RuleController {
             modelAndView.setViewName("editRule");
         } else {
             // TODO Redirect to error page!
-            modelAndView.addObject("exception", exception);
+            modelAndView.addObject("errorMessage", exception);
             modelAndView.setViewName("error");
         }
 
