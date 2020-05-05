@@ -1,5 +1,5 @@
 <#import "container.ftl" as c>
-<@c.container "Rules">
+<@c.container>
     <script type="text/javascript">
         function onEdit() {
             const rules = document.getElementById("listRules");
@@ -16,41 +16,36 @@
         } // end updateResultHidden
     </script>
     <form action="/rules/delete" method="post">
-        <table>
-            <tr>
-                <td>
+        <div class="card w-50">
+            <h5 class="card-header">Rules</h5>
+            <div class="card-body">
+                <div class="form-group row">
                     <input id="rule_id" name="rule_id" type="hidden"/>
-                    <#if rules?has_content>
-                        <select id="listRules" onchange="onSelect(this)">
-                            <option value="NONE">--- Select ---</option>
-                            <#list rules as rule>
-                                <option value="${rule.getId()}">${rule.name}</option>
-                            </#list>
-                        </select>
-                    <#else>
-                        <p>No rules</p>
-                    </#if>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <table>
-                        <tr>
-                            <td>
-                                <input name="add" value="Add" title="Add" type="button"
-                                       onClick="location.href='/rules/new'"/>
-                            </td>
-                            <td>
-                                <input name="edit"
-                                       value="Edit" title="Edit" type="button" onClick="onEdit()"/>
-                            </td>
-                            <td>
-                                <input name="remove" value="Remove" title="Remove" type="submit"/>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10">
+                        <#if rules?has_content>
+                            <select class="form-control-sm" id="listRules" onchange="onSelect(this)">
+                                <option value="NONE">--- Select ---</option>
+                                <#list rules as rule>
+                                    <option value="${rule.getId()}">${rule.name}</option>
+                                </#list>
+                            </select>
+                        <#else>
+                            <p>No rules</p>
+                        </#if>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10">
+                        <input class="btn btn-primary mr-2" name="add" value="Add" title="Add" type="button"
+                               onClick="location.href='/rules/new'"/>
+                        <input class="btn btn-primary mr-2" name="edit"
+                               value="Edit" title="Edit" type="button" onClick="onEdit()"/>
+                        <input class="btn btn-primary" name="remove" value="Remove" title="Remove" type="submit"/>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 </@c.container>
