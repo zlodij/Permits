@@ -1,6 +1,6 @@
 <#import "container.ftl" as c>
 <#assign sf=JspTaglibs["http://www.springframework.org/tags/form"]>
-<@c.container "Select ${title}">
+<@c.container>
     <script type="text/javascript">
         // Actualize value of result hidden field
         function updateHiddenFromSelect(select) {
@@ -60,28 +60,22 @@
         } // end getSelectValues
     </script>
     <@sf.form action="/rules/${id}/rule/selector" method="post">
-        <table>
-            <tr>
-                <td>
-                    <div>
-                        <input id="attribute" name="attribute" type="hidden" value="${attribute}"/>
-                        <input id="selected" name="selected" type="hidden" value="${listSelected?join(",")}"/>
-                        <input type="submit">
-                        <input name="home" value="Cancel" title="Cancel" type="button"
-                               onClick="location.href='/rules/${id}/rule'">
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td valign="top">
+        <input id="attribute" name="attribute" type="hidden" value="${attribute}"/>
+        <input id="selected" name="selected" type="hidden" value="${listSelected?join(",")}"/>
+        <div class="card w-50">
+            <h5 class="card-header">Choose : ${title}</h5>
+            <div class="card-body">
+                <div class="form-group row">
                     <table>
                         <tr>
                             <td>
-                                <select id="listIn" name="listIn" multiple size="10" style="width:200px">>
+                                <select multiple class="form-control" id="listIn" name="listIn">
                                     <#if listAvailable?has_content>
                                         <#list listAvailable as row>
                                             <option value="${row}">${row}</option>
                                         </#list>
+                                    <#else>
+                                        <option value=""></option>
                                     </#if>
                                 </select>
                             </td>
@@ -89,18 +83,22 @@
                                 <table>
                                     <tr>
                                         <td>
-                                            <button type="button" onclick="onAdd()">&gt;</button>
+                                            <button class="btn btn-outline-primary btn-sm mx-3" type="button"
+                                                    onclick="onAdd()">&gt;
+                                            </button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <button type="button" onclick="onRemove()">&lt;</button>
+                                            <button class="btn btn-outline-primary btn-sm mx-3" type="button"
+                                                    onclick="onRemove()">&lt;
+                                            </button>
                                         </td>
                                     </tr>
                                 </table>
                             </td>
                             <td>
-                                <select id="listOut" name="listOut" multiple size="10" style="width:200px">
+                                <select multiple class="form-control" id="listOut" name="listOut">
                                     <#if listSelected?has_content>
                                         <#list listSelected as row>
                                             <option value="${row}">${row}</option>
@@ -110,8 +108,13 @@
                             </td>
                         </tr>
                     </table>
-                </td>
-            </tr>
-        </table>
+                </div>
+                <div class="form-group row">
+                    <input class="btn btn-primary mx-2" name="apply" value="Apply" type="submit"/>
+                    <input class="btn btn-primary mx-2" name="cancel" value="Cancel" title="Cancel" type="button"
+                           onClick="location.href='/rules/${id}/rule'">
+                </div>
+            </div>
+        </div>
     </@sf.form>
 </@c.container>
