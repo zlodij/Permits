@@ -52,7 +52,7 @@
         <@sf.hidden path="parentId"/>
         <@sf.hidden path="name"/>
         <div class="card">
-            <h5 class="card-header">Edit Accessor : ${accessor.getName()}</h5>
+            <h5 class="card-header">Accessor : ${accessor.getName()}</h5>
             <div class="card-body">
                 <div class="form-group row">
                     <@sf.label cssClass="col-sm-2 col-form-label" path="name">Name</@sf.label>
