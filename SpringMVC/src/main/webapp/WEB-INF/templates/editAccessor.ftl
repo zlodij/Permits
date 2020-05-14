@@ -33,25 +33,19 @@
             document.getElementById("svc").value = isSvcChecked;
             document.getElementById("div-svc-alias").hidden = !isSvcChecked;
             document.getElementById("div-not-svc-alias").hidden = isSvcChecked;
+            document.getElementById("orgLevels").disabled = !isSvcChecked;
 
             const select = isSvcChecked
                 ? document.getElementById("listSvcAliases")
                 : document.getElementById("listNotSvcAliases");
             onSelect(select);
-
-            const inputs = document.getElementsByName("orgLevels");
-
-            let input;
-            for (input of inputs) {
-                input.disabled = !input.disabled;
-            }
         } // end onClickSvc
     </script>
     <@sf.form action="/rules/${accessor.getId()}/accessor" method="post" modelAttribute="accessor">
         <@sf.hidden path="id"/>
         <@sf.hidden path="parentId"/>
         <@sf.hidden path="name"/>
-        <div class="card">
+        <div class="card w-75">
             <h5 class="card-header">Accessor : ${accessor.getName()}</h5>
             <div class="card-body">
                 <div class="form-group row">
@@ -96,8 +90,8 @@
                                 <p>No aliases available</p>
                             </#if>
                         </div>
-                        <div class="alert alert-danger" role="alert">
-                            <@sf.errors path="permit"/>
+                        <div style="color:red;font-style:italic;">
+                            <@sf.errors path="name"/>
                         </div>
                     </div>
                 </div>
@@ -147,36 +141,27 @@
                 <div class="form-group row">
                     <@sf.label cssClass="col-sm-2 col-form-label" path="orgLevels">Org.Levels</@sf.label>
                     <div class="col-sm-4">
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" name="orgLevels" value="co" title="CO" type="checkbox"
-                                   <#if accessor.getOrgLevels()?contains("co")>checked</#if>
-                                    <#if !(accessor.isAlias() && accessor.isSvc())>disabled</#if>/>
-                            <label class="form-check-label">Central Office (CO)</label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" name="orgLevels" value="vr" title="VR" type="checkbox"
-                                   <#if accessor.getOrgLevels()?contains("vr")>checked</#if>
-                                    <#if !(accessor.isAlias() && accessor.isSvc())>disabled</#if>/>
-                            <label class="form-check-label">Super Region (VR)</label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" name="orgLevels" value="mr" title="MR" type="checkbox"
-                                   <#if accessor.getOrgLevels()?contains("mr")>checked</#if>
-                                    <#if !(accessor.isAlias() && accessor.isSvc())>disabled</#if>/>
-                            <label class="form-check-label">Macro Region (MR)</label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" name="orgLevels" value="od" title="OD" type="checkbox"
-                                   <#if accessor.getOrgLevels()?contains("od")>checked</#if>
-                                    <#if !(accessor.isAlias() && accessor.isSvc())>disabled</#if>/>
-                            <label class="form-check-label">Outstanding Direction (OD)</label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" name="orgLevels" value="rd" title="RD" type="checkbox"
-                                   <#if accessor.getOrgLevels()?contains("rd")>checked</#if>
-                                    <#if !(accessor.isAlias() && accessor.isSvc())>disabled</#if>/>
-                            <label class="form-check-label">Regional Direction (RD)</label>
-                        </div>
+                        <select class="selectpicker" id="orgLevels" name="orgLevels" multiple
+                                <#if !(accessor.isAlias() && accessor.isSvc())>disabled</#if>>
+                            <option value="co" <#if accessor.getOrgLevels()?contains("co")>selected</#if>>Central Office
+                                (CO)
+                            </option>
+                            <option value="vr" <#if accessor.getOrgLevels()?contains("vr")>selected</#if>>Super Region
+                                (VR)
+                            </option>
+                            <option value="mr" <#if accessor.getOrgLevels()?contains("mr")>selected</#if>>Macro Region
+                                (MR)
+                            </option>
+                            <option value="od" <#if accessor.getOrgLevels()?contains("od")>selected</#if>>Outstanding
+                                Direction (OD)
+                            </option>
+                            <option value="rd" <#if accessor.getOrgLevels()?contains("rd")>selected</#if>>Regional
+                                Direction (RD)
+                            </option>
+                        </select>
+                        <script type="text/javascript">
+                            $('orgLevels').selectpicker();
+                        </script>
                         <div style="color:red;font-style:italic;">
                             <@sf.errors path="orgLevels"/>
                         </div>
@@ -185,48 +170,39 @@
                 <div class="form-group row">
                     <@sf.label cssClass="col-sm-2 col-form-label" path="xPermits">XPermits</@sf.label>
                     <div class="col-sm-4">
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" name="xPermits" value="EXECUTE_PROC"
-                                   title="Execute Procedure"
-                                   type="checkbox" <#if accessor.getXPermits()?contains("EXECUTE_PROC")>checked</#if>/>
-                            <label class="form-check-label">Execute Procedure (EP)</label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" name="xPermits" value="CHANGE_LOCATION"
-                                   title="Change Location"
-                                   type="checkbox"
-                                   <#if accessor.getXPermits()?contains("CHANGE_LOCATION")>checked</#if>/>
-                            <label class="form-check-label">Change Location (CL)</label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" name="xPermits" value="CHANGE_STATE" title="Change State"
-                                   type="checkbox" <#if accessor.getXPermits()?contains("CHANGE_STATE")>checked</#if>/>
-                            <label class="form-check-label">Change State (CS)</label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" name="xPermits" value="CHANGE_PERMIT"
-                                   title="Change Permission"
-                                   type="checkbox" <#if accessor.getXPermits()?contains("CHANGE_PERMIT")>checked</#if>/>
-                            <label class="form-check-label">Change Permission (CP)</label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" name="xPermits" value="CHANGE_OWNER"
-                                   title="Change Ownership"
-                                   type="checkbox" <#if accessor.getXPermits()?contains("CHANGE_OWNER")>checked</#if>/>
-                            <label class="form-check-label">Change Ownership (CO)</label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" name="xPermits" value="DELETE_OBJECT"
-                                   title="Extended Delete"
-                                   type="checkbox" <#if accessor.getXPermits()?contains("DELETE_OBJECT")>checked</#if>/>
-                            <label class="form-check-label">Extended Delete (DO)</label>
-                        </div>
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" name="xPermits" value="CHANGE_FOLDER_LINKS"
-                                   title="Change Folder Links" type="checkbox"
-                                   <#if accessor.getXPermits()?contains("CHANGE_FOLDER_LINKS")>checked</#if>/>
-                            <label class="form-check-label">Change Folder Links (CFL)</label>
-                        </div>
+                        <select class="selectpicker" id="xPermits" name="xPermits" multiple>
+                            <option value="EXECUTE_PROC"
+                                    <#if accessor.getXPermits()?contains("EXECUTE_PROC")>selected</#if>>Execute
+                                Procedure (EP)
+                            </option>
+                            <option value="CHANGE_LOCATION"
+                                    <#if accessor.getXPermits()?contains("CHANGE_LOCATION")>selected</#if>>Change
+                                Location (CL)
+                            </option>
+                            <option value="CHANGE_STATE"
+                                    <#if accessor.getXPermits()?contains("CHANGE_STATE")>selected</#if>>Change State
+                                (CS)
+                            </option>
+                            <option value="CHANGE_PERMIT"
+                                    <#if accessor.getXPermits()?contains("CHANGE_PERMIT")>selected</#if>>Change
+                                Permission (CP)
+                            </option>
+                            <option value="CHANGE_OWNER"
+                                    <#if accessor.getXPermits()?contains("CHANGE_OWNER")>selected</#if>>Change Ownership
+                                (CO)
+                            </option>
+                            <option value="DELETE_OBJECT"
+                                    <#if accessor.getXPermits()?contains("DELETE_OBJECT")>selected</#if>>Extended Delete
+                                (DO)
+                            </option>
+                            <option value="CHANGE_FOLDER_LINKS"
+                                    <#if accessor.getXPermits()?contains("CHANGE_FOLDER_LINKS")>selected</#if>>Change
+                                Folder Links (CFL)
+                            </option>
+                        </select>
+                        <script type="text/javascript">
+                            $('xPermits').selectpicker();
+                        </script>
                         <div style="color:red;font-style:italic;">
                             <@sf.errors path="xPermits"/>
                         </div>
