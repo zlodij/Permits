@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -42,7 +43,7 @@ public class RuleController {
     private final static String ATTR_STATUSES = "statuses";
     private final static String ATTR_OBJ_TYPES = "objTypes";
 
-    private Map<String, BaseObject> cache = new HashMap<>();
+    private final Map<String, BaseObject> cache = new HashMap<>();
 
     private Rule getRule(String id) {
         Rule rule = service.getRuleById(id);
@@ -72,8 +73,9 @@ public class RuleController {
     } // end sayHello
 
     @GetMapping("/error")
-    public String showError(@RequestParam String errorMessage, Model model) {
+    public String showError(@RequestParam String errorMessage, @RequestParam String returnPath, Model model) {
         model.addAttribute("errorMessage", errorMessage);
+        model.addAttribute("returnPath", returnPath);
         return "error";
     } // end showError
 
@@ -136,6 +138,7 @@ public class RuleController {
     @GetMapping("/rules/{id}/accessor")
     public String getAccessorForm(@PathVariable("id") String id,
                                   @RequestParam(required = false) String parentId,
+                                  WebRequest request,
                                   Model model) {
         Accessor accessor = getAccessor(id);
         if (accessor == null) {
@@ -149,10 +152,12 @@ public class RuleController {
                     cache.put(id, accessor);
                 } else {
                     model.addAttribute("errorMessage", "Failed to find Rule with ID '" + parentId + "'!");
+                    model.addAttribute("returnPath", ((ServletWebRequest) request).getRequest().getRequestURI());
                     return "redirect:/error";
                 }
             } else {
                 model.addAttribute("errorMessage", "Invalid parent Rule ID '" + parentId + "' specified!");
+                model.addAttribute("returnPath", ((ServletWebRequest) request).getRequest().getRequestURI());
                 return "redirect:/error";
             }
         }
@@ -199,6 +204,7 @@ public class RuleController {
     @PostMapping("/rules/{id}/accessor")
     public String submitAccessorForm(@PathVariable("id") String id,
                                      @ModelAttribute Accessor accessor,
+                                     WebRequest request,
                                      Model model) {
         String result;
 
@@ -224,6 +230,7 @@ public class RuleController {
                 cache.put(id, accessor);
             } else {
                 model.addAttribute("errorMessage", "Failed to find Rule with ID '" + accessor.getParentId() + "'!");
+                model.addAttribute("returnPath", ((ServletWebRequest) request).getRequest().getRequestURI());
                 result = "redirect:/error";
             }
         }
@@ -235,6 +242,7 @@ public class RuleController {
     public String submitSelectorForm(@PathVariable("id") String id,
                                      @RequestParam ArrayList<String> selected,
                                      @RequestParam String attribute,
+                                     WebRequest request,
                                      Model model) {
         String result;
 
@@ -251,6 +259,7 @@ public class RuleController {
             model.addAttribute("rule", rule);
         } else {
             model.addAttribute("errorMessage", "Failed to find Rule with ID '" + id + "'!");
+            model.addAttribute("returnPath", ((ServletWebRequest) request).getRequest().getRequestURI());
             result = "redirect:/error";
         }
 
