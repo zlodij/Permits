@@ -85,7 +85,7 @@
                                     <#list rule.getAccessors() as accessor>
                                         <tr>
                                             <td>${accessor.getName()}</td>
-                                            <td>${accessor.getPermitAsString()?upper_case}</td>
+                                            <td>${accessor.getPermit().getDisplay()?upper_case}</td>
                                             <td>
                                                 <#if accessor.isAlias()>
                                                     <span class="fas fa-check" style="color: green" title="Yes"></span>
@@ -100,8 +100,9 @@
                                                     <span class="fas fa-times" style="color: red" title="No"></span>
                                                 </#if>
                                             </td>
-                                            <td>${accessor.getOrgLevels()}</td>
-                                            <td>${accessor.getXPermitsAcronyms()}</td>
+                                            <td>${accessor.getOrgLevels()?join(",")}</td>
+                                            <#assign acronyms = accessor.getXPermits()?map(xpermit -> xpermit.getAcronym())>
+                                            <td>${acronyms?join(",")}</td>
                                             <td>
                                                 <button class="btn btn-outline-primary btn-sm" type="button"
                                                         title="Edit"
