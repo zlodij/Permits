@@ -53,7 +53,7 @@
                     <div class="col-sm-4">
                         <div id="div-role" <#if accessor.isAlias()>hidden</#if>>
                             <#if listRoles?has_content>
-                                <select class="form-control-sm" id="listRoles" onchange="onSelect(this)">
+                                <select class="form-control" id="listRoles" onchange="onSelect(this)">
                                     <option value=""/>
                                     <#list listRoles as role>
                                         <option value="${role}"
@@ -66,7 +66,7 @@
                         </div>
                         <div id="div-svc-alias" <#if !accessor.isAlias() || !accessor.isSvc()>hidden</#if>>
                             <#if listSvcAliases?has_content>
-                                <select class="form-control-sm" id="listSvcAliases" onchange="onSelect(this)">
+                                <select class="form-control" id="listSvcAliases" onchange="onSelect(this)">
                                     <option value=""/>
                                     <#list listSvcAliases as alias>
                                         <option value="${alias}"
@@ -79,7 +79,7 @@
                         </div>
                         <div id="div-not-svc-alias" <#if !accessor.isAlias() || accessor.isSvc()>hidden</#if>>
                             <#if listNotSvcAliases?has_content>
-                                <select class="form-control-sm" id="listNotSvcAliases" onchange="onSelect(this)">
+                                <select class="form-control" id="listNotSvcAliases" onchange="onSelect(this)">
                                     <option value=""/>
                                     <#list listNotSvcAliases as alias>
                                         <option value="${alias}"
@@ -97,17 +97,17 @@
                 </div>
                 <div class="form-group row">
                     <@sf.label cssClass="col-sm-2 col-form-label" path="permit">Permit</@sf.label>
-                    <div class="col-sm-4">
-                        <@sf.select cssClass="form-control-sm" path="permit">
-                            <@sf.option value="0" label=""/>
-                            <@sf.option value="1" label="NONE"/>
-                            <@sf.option value="2" label="BROWSE"/>
-                            <@sf.option value="3" label="READ"/>
-                            <@sf.option value="4" label="RELATE"/>
-                            <@sf.option value="5" label="VERSION"/>
-                            <@sf.option value="6" label="WRITE"/>
-                            <@sf.option value="7" label="DELETE"/>
-                        </@sf.select>
+                    <div class="col-sm-3">
+                        <#if listPermits?has_content>
+                            <select class="form-control" id="permit" name="permit">
+                                <#list listPermits as permit>
+                                    <option value="${permit.getValue()}"
+                                            <#if accessor.getPermit().equals(permit)>selected</#if>>${permit.getDisplay()?upper_case}</option>
+                                </#list>
+                            </select>
+                        <#else>
+                            <span>Not available</span>
+                        </#if>
                         <div style="color:red;font-style:italic;">
                             <@sf.errors path="permit"/>
                         </div>
@@ -141,27 +141,17 @@
                 <div class="form-group row">
                     <@sf.label cssClass="col-sm-2 col-form-label" path="orgLevels">Org.Levels</@sf.label>
                     <div class="col-sm-4">
-                        <select class="selectpicker" id="orgLevels" name="orgLevels" multiple
-                                <#if !(accessor.isAlias() && accessor.isSvc())>disabled</#if>>
-                            <option value="co" <#if accessor.getOrgLevels()?contains("co")>selected</#if>>Central Office
-                                (CO)
-                            </option>
-                            <option value="vr" <#if accessor.getOrgLevels()?contains("vr")>selected</#if>>Super Region
-                                (VR)
-                            </option>
-                            <option value="mr" <#if accessor.getOrgLevels()?contains("mr")>selected</#if>>Macro Region
-                                (MR)
-                            </option>
-                            <option value="od" <#if accessor.getOrgLevels()?contains("od")>selected</#if>>Outstanding
-                                Direction (OD)
-                            </option>
-                            <option value="rd" <#if accessor.getOrgLevels()?contains("rd")>selected</#if>>Regional
-                                Direction (RD)
-                            </option>
-                        </select>
-                        <script type="text/javascript">
-                            $('orgLevels').selectpicker();
-                        </script>
+                        <#if listOrgLevels?has_content>
+                            <select class="selectpicker" id="orgLevels" name="orgLevels" multiple
+                                    <#if !(accessor.isAlias() && accessor.isSvc())>disabled</#if>>
+                                <#list listOrgLevels as orgLevel>
+                                    <option value="${orgLevel.getValue()}"
+                                            <#if accessor.hasOrgLevel(orgLevel)>selected</#if>>${orgLevel.getDisplay()}</option>
+                                </#list>
+                            </select>
+                        <#else>
+                            <span>Not available</span>
+                        </#if>
                         <div style="color:red;font-style:italic;">
                             <@sf.errors path="orgLevels"/>
                         </div>
@@ -170,39 +160,16 @@
                 <div class="form-group row">
                     <@sf.label cssClass="col-sm-2 col-form-label" path="xPermits">XPermits</@sf.label>
                     <div class="col-sm-4">
-                        <select class="selectpicker" id="xPermits" name="xPermits" multiple>
-                            <option value="EXECUTE_PROC"
-                                    <#if accessor.getXPermits()?contains("EXECUTE_PROC")>selected</#if>>Execute
-                                Procedure (EP)
-                            </option>
-                            <option value="CHANGE_LOCATION"
-                                    <#if accessor.getXPermits()?contains("CHANGE_LOCATION")>selected</#if>>Change
-                                Location (CL)
-                            </option>
-                            <option value="CHANGE_STATE"
-                                    <#if accessor.getXPermits()?contains("CHANGE_STATE")>selected</#if>>Change State
-                                (CS)
-                            </option>
-                            <option value="CHANGE_PERMIT"
-                                    <#if accessor.getXPermits()?contains("CHANGE_PERMIT")>selected</#if>>Change
-                                Permission (CP)
-                            </option>
-                            <option value="CHANGE_OWNER"
-                                    <#if accessor.getXPermits()?contains("CHANGE_OWNER")>selected</#if>>Change Ownership
-                                (CO)
-                            </option>
-                            <option value="DELETE_OBJECT"
-                                    <#if accessor.getXPermits()?contains("DELETE_OBJECT")>selected</#if>>Extended Delete
-                                (DO)
-                            </option>
-                            <option value="CHANGE_FOLDER_LINKS"
-                                    <#if accessor.getXPermits()?contains("CHANGE_FOLDER_LINKS")>selected</#if>>Change
-                                Folder Links (CFL)
-                            </option>
-                        </select>
-                        <script type="text/javascript">
-                            $('xPermits').selectpicker();
-                        </script>
+                        <#if listXPermits?has_content>
+                            <select class="selectpicker" id="xPermits" name="xPermits" multiple>
+                                <#list listXPermits as xPermit>
+                                    <option value="${xPermit.getValue()}"
+                                            <#if accessor.hasXPermit(xPermit)>selected</#if>>${xPermit.getDisplay()}</option>
+                                </#list>
+                            </select>
+                        <#else>
+                            <span>Not available</span>
+                        </#if>
                         <div style="color:red;font-style:italic;">
                             <@sf.errors path="xPermits"/>
                         </div>
