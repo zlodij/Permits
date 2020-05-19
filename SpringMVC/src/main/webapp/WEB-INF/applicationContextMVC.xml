@@ -6,6 +6,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
     <mvc:annotation-driven/>
+    <mvc:annotation-driven conversion-service="conversionService"/>
     <context:component-scan base-package="com.example.permits"/>
 
     <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
@@ -29,4 +30,14 @@
     <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"/>
 
     <bean id="jsr303Validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set merge="true">
+                <bean class="com.example.permits.converter.StringToOrgLevelsConverter"/>
+                <bean class="com.example.permits.converter.StringToPermitConverter"/>
+                <bean class="com.example.permits.converter.StringToXPermitConverter"/>
+            </set>
+        </property>
+    </bean>
 </beans>
