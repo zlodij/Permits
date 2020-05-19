@@ -1,14 +1,30 @@
 package com.example.permits.service;
 
+import com.example.permits.enums.OrgLevel;
+import com.example.permits.enums.Permit;
+import com.example.permits.enums.XPermit;
 import com.example.permits.model.Accessor;
 import com.example.permits.model.Rule;
+import com.google.common.base.Splitter;
 import org.apache.commons.io.FileUtils;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.*;
-import java.io.*;
-import java.util.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 final class XmlDataProvider {
     private static final String ACCESS_RULE = "rule";
@@ -156,11 +172,17 @@ final class XmlDataProvider {
             result = new Accessor(accessorName,
                     accessorIsAliasB,
                     accessorIsSvcB,
-                    accessorPermitI,
-                    accessorXPermits,
-                    accessorLevels
-//                    Splitter.on(",").trimResults().splitToList(accessorXPermits),
-//                    Splitter.on(",").trimResults().splitToList(accessorLevels)
+                    Permit.getPermit(accessorPermitI).orElse(Permit.NONE),
+                    Splitter.on(",").splitToList(accessorXPermits).stream()
+                            .map(XPermit::getXPermit)
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .collect(Collectors.toSet()),
+                    Splitter.on(",").splitToList(accessorLevels).stream()
+                            .map(OrgLevel::getOrgLevel)
+                            .filter(Optional::isPresent)
+                            .map(Optional::get)
+                            .collect(Collectors.toSet())
             );
         }
 
