@@ -1,4 +1,4 @@
-package com.example.permits.enums.converter;
+package com.example.permits.converter;
 
 import com.example.permits.enums.OrgLevel;
 import org.springframework.core.convert.converter.Converter;
