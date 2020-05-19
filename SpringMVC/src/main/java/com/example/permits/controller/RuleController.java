@@ -1,9 +1,12 @@
 package com.example.permits.controller;
 
+import com.example.permits.enums.OrgLevel;
+import com.example.permits.enums.XPermit;
 import com.example.permits.model.Accessor;
 import com.example.permits.model.BaseObject;
 import com.example.permits.model.Rule;
 import com.example.permits.service.RuleService;
+import com.example.permits.enums.Permit;
 import com.example.permits.utils.dict.DictDataProvider;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
@@ -161,12 +164,21 @@ public class RuleController {
                 return "redirect:/error";
             }
         }
-        model.addAttribute("listRoles", DictDataProvider.getInstance().getSupportedRoles());
-        model.addAttribute("listSvcAliases", DictDataProvider.getInstance().getSupportedAliases(true));
-        model.addAttribute("listNotSvcAliases", DictDataProvider.getInstance().getSupportedAliases(false));
+        model.mergeAttributes(getAccessorFormDefaultAttributesMap());
         model.addAttribute("accessor", accessor);
         return "editAccessor";
     } // end getAccessorForm
+
+    private Map<String, Object> getAccessorFormDefaultAttributesMap() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("listPermits", Arrays.asList(Permit.values()));
+        result.put("listXPermits", Arrays.asList(XPermit.values()));
+        result.put("listOrgLevels", Arrays.asList(OrgLevel.values()));
+        result.put("listRoles", DictDataProvider.getInstance().getSupportedRoles());
+        result.put("listSvcAliases", DictDataProvider.getInstance().getSupportedAliases(true));
+        result.put("listNotSvcAliases", DictDataProvider.getInstance().getSupportedAliases(false));
+        return result;
+    } // end getAccessorFormDefaultModel
 
     @PostMapping("/rules/{id}/rule")
     public String submitRuleForm(@PathVariable("id") String id,
@@ -215,9 +227,7 @@ public class RuleController {
         if (bindingResult.hasErrors()) {
             String key = BindingResult.class.getCanonicalName() + ".accessor";
             model.addAttribute(key, bindingResult);
-            model.addAttribute("listRoles", DictDataProvider.getInstance().getSupportedRoles());
-            model.addAttribute("listSvcAliases", DictDataProvider.getInstance().getSupportedAliases(true));
-            model.addAttribute("listNotSvcAliases", DictDataProvider.getInstance().getSupportedAliases(false));
+            model.mergeAttributes(getAccessorFormDefaultAttributesMap());
             result = "editAccessor";
         } else {
             Rule rule = getRule(accessor.getParentId());
