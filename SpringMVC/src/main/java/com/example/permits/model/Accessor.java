@@ -1,6 +1,11 @@
 package com.example.permits.model;
 
-import javax.validation.constraints.*;
+import com.example.permits.enums.*;
+
+import javax.validation.constraints.NotBlank;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Accessor extends BaseObjectImpl {
     private final static String ID_PATTERN = "A%07d";
@@ -9,24 +14,22 @@ public class Accessor extends BaseObjectImpl {
     private String name;
     private Boolean alias;
     private Boolean svc;
-    @DecimalMin(value = "1")
-    @DecimalMax(value = "7")
-    private Integer permit;
-    private String xPermits;
-    private String orgLevels;
+    private Permit permit;
+    private final Set<XPermit> xPermits = new HashSet<>();
+    private final Set<OrgLevel> orgLevels = new HashSet<>();
 
     public Accessor() {
-        this("", false, false, 0, "", "");
+        this("", false, false, Permit.NONE, null, null);
     } // end default constructor
 
-    public Accessor(String name, boolean isAlias, boolean isSvc, int permit, String xPermits, String orgLevels) {
+    public Accessor(String name, boolean isAlias, boolean isSvc, Permit permit, Collection<XPermit> xPermits, Collection<OrgLevel> orgLevels) {
         super();
-        this.name = name;
-        this.alias = isAlias;
-        this.svc = isSvc;
-        this.permit = permit;
-        this.xPermits = xPermits;
-        this.orgLevels = orgLevels;
+        setName(name);
+        setAlias(isAlias);
+        setSvc(isSvc);
+        setPermit(permit);
+        setXPermits(xPermits);
+        setOrgLevels(orgLevels);
     } // end constructor
 
     @Override
@@ -46,19 +49,22 @@ public class Accessor extends BaseObjectImpl {
         this.alias = alias;
     } // end setAlias
 
-    public String getOrgLevels() {
+    public Collection<OrgLevel> getOrgLevels() {
         return orgLevels;
     } // end getOrgLevels
 
-    public void setOrgLevels(String orgLevels) {
-        this.orgLevels = orgLevels;
+    public void setOrgLevels(Collection<OrgLevel> orgLevels) {
+        this.orgLevels.clear();
+        if (orgLevels != null) {
+            this.orgLevels.addAll(orgLevels);
+        }
     } // end setOrgLevels
 
-    public int getPermit() {
+    public Permit getPermit() {
         return permit;
     } // end getPermit
 
-    public void setPermit(int permit) {
+    public void setPermit(Permit permit) {
         this.permit = permit;
     } // end setPermit
 
@@ -70,13 +76,24 @@ public class Accessor extends BaseObjectImpl {
         this.svc = svc;
     } // end setSvc
 
-    public String getXPermits() {
+    public Collection<XPermit> getXPermits() {
         return xPermits;
     } // end getXPermits
 
-    public void setXPermits(String xPermits) {
-        this.xPermits = xPermits;
+    public void setXPermits(Collection<XPermit> xPermits) {
+        this.xPermits.clear();
+        if (xPermits != null) {
+            this.xPermits.addAll(xPermits);
+        }
     } // end setXPermits
+
+    public boolean hasXPermit(XPermit xPermit) {
+        return getXPermits().contains(xPermit);
+    } // end hasXPermit
+
+    public boolean hasOrgLevel(OrgLevel orgLevel) {
+        return getOrgLevels().contains(orgLevel);
+    } // end hasOrgLevel
 
     public void setName(String name) {
         this.name = name;
